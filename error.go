@@ -1,4 +1,4 @@
-package sd_helper
+package sdhelper
 
 import (
 	"runtime"

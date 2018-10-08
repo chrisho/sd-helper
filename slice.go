@@ -1,4 +1,4 @@
-package sd_helper
+package sdhelper
 
 // 对比两个不同int32数组
 // compareOld : old->new, old 对比 new，在 new 中不存在

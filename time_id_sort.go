@@ -1,4 +1,4 @@
-package sd_helper
+package sdhelper
 
 const TimeIdSortMultiple int64 = 1E9
 
