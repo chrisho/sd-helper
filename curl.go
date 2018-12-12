@@ -21,5 +21,3 @@ func CurlGet(url string) (r string, err error) {
 	}
 	return string(byteSlice), nil
 }
-
-

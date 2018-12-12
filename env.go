@@ -1,16 +1,13 @@
 package sdhelper
 
 import (
-	"log"
 	"os"
 )
 
 func GetEnv(key string) (value string) {
-	value = os.Getenv(key)
+	return os.Getenv(key)
+}
 
-	if value == "" {
-		log.Println(key, " value is empty or not exist")
-	}
-
-	return
+func SetEnv(key string, value string) error {
+	return os.Setenv(key, value)
 }
