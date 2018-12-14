@@ -1,3 +1,4 @@
+// 更新
 package sdhelper
 
 const TimeIdSortMultiple int64 = 1E9

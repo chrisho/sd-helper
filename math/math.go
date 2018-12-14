@@ -1,9 +1,8 @@
-// 更新
-package sdhelper
+package math
 
 import (
-	"math"
 	"fmt"
+	"math"
 	"strconv"
 )
 

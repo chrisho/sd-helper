@@ -1,19 +1,8 @@
-// 更新
-package sdhelper
+package time
 
 import (
 	"time"
 )
-
-//const timezone = "Asia/ShangHai"
-//
-//func init() {
-//	var err error
-//	// 设置时间区
-//	if time.Local, err = time.LoadLocation(timezone); err != nil {
-//		println(err)
-//	}
-//}
 
 const (
 	YYYYMMDDHHIISS = "2006-01-02 15:04:05"
@@ -22,6 +11,7 @@ const (
 	YYYYMMDD       = "2006-01-02"
 	RFC3339        = time.RFC3339
 )
+const TimeIdSortMultiple int64 = 1E9
 
 func TimeNow() time.Time {
 	return time.Now()
@@ -132,4 +122,12 @@ func DateYYMMDDHHIISS() string {
 	dateSlice := DateSlice()
 
 	return string(dateSlice[2:len(dateSlice)-1])
+}
+
+// 默认长度为19为，time(10位）* 1E9(9位） + id， 修改长度，请修改改1E9...
+func TimeIdSort(time, id int32) int64 {
+	if time <= 0 {
+		return 0
+	}
+	return int64(time)*TimeIdSortMultiple + int64(id)
 }

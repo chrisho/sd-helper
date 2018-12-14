@@ -1,8 +1,9 @@
+// 更新
 package sdhelper
 
 import (
-	"runtime"
 	"fmt"
+	"runtime"
 )
 
 func GetErrorInfo() (file, function string) {

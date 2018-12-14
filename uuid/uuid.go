@@ -1,5 +1,4 @@
-// 更新
-package sdhelper
+package uuid
 
 import "github.com/rs/xid"
 

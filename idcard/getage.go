@@ -1,19 +1,18 @@
-// 更新
-package sdhelper
+package idcard
 
 import (
-	"time"
-	"github.com/chrisho/mosquito/validator"
-	"strconv"
+	"github.com/chrisho/sd-helper/valid"
 	"math"
+	"strconv"
+	"time"
 )
 
-func CalcIdcardAge(idcard string) int {
-	if ! validator.IsIdcard(idcard) {
+func GetAge(idNo string) int {
+	if !valid.IsIdcard(idNo) {
 		return 0
 	}
 
-	idcardDateStr := string([]byte(idcard)[6:14])
+	idcardDateStr := string([]byte(idNo)[6:14])
 	nowTimeDateStr := time.Now().Format("20060102")
 	idcardDateInt, _ := strconv.Atoi(idcardDateStr)
 	nowTimeDateInt, _ := strconv.Atoi(nowTimeDateStr)

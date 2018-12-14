@@ -1,3 +1,4 @@
+// 废弃
 package sdhelper
 
 // 对比两个不同int32数组

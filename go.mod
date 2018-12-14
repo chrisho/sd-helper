@@ -5,7 +5,12 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf
 	github.com/cenkalti/backoff v2.0.0+incompatible // indirect
 	github.com/chrisho/mosquito v0.0.0-20180816084118-4db469d63f30
+	github.com/cweill/gotests v1.5.2 // indirect
+	github.com/go-playground/locales v0.12.1 // indirect
+	github.com/go-playground/universal-translator v0.16.0 // indirect
+	github.com/go-playground/validator v9.24.0+incompatible
 	github.com/gogo/protobuf v1.2.0 // indirect
+	github.com/leodido/go-urn v1.1.0 // indirect
 	github.com/pierrec/lz4 v2.0.7+incompatible // indirect
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/rs/xid v1.2.1

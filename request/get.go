@@ -1,20 +1,21 @@
-// 更新
-package sdhelper
+package request
 
 import (
-	"net/http"
-	"errors"
+	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
+	"net/http"
 )
 
-func CurlGet(url string) (r string, err error) {
+
+func Get(url string) (r string, err error) {
 	request := &http.Client{}
 	response, err := request.Get(url)
 	if err != nil {
 		return r, err
 	}
 	if response.StatusCode != 200 {
-		return r, errors.New("request fail")
+		return r, errors.New("request fail code: " + fmt.Sprintf("%d", response.StatusCode))
 	}
 	byteSlice, err := ioutil.ReadAll(response.Body)
 	if err != nil {

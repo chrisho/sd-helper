@@ -1,11 +1,10 @@
-// 更新
-package sdhelper
+package random
 
 import (
-	"time"
 	"math/rand"
-	"strings"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func RandomString(length int) string {
