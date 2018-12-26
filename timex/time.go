@@ -4,11 +4,17 @@ import (
 	"time"
 )
 
+var (
+	oneDay, _  = time.ParseDuration("24h")
+	oneHour, _ = time.ParseDuration("1h")
+)
+
 const (
 	YYYYMMDDHHIISS = "2006-01-02 15:04:05"
 	YYYYMMDDHHII   = "2006-01-02 15:04"
 	YYYYMMDDHH     = "2006-01-02 15"
 	YYYYMMDD       = "2006-01-02"
+	YYYYMM         = "2006-01"
 	RFC3339        = time.RFC3339
 )
 const TimeIdSortMultiple int64 = 1E9
@@ -121,7 +127,7 @@ func DateYYYYMMDDHHIISS() string {
 func DateYYMMDDHHIISS() string {
 	dateSlice := DateSlice()
 
-	return string(dateSlice[2:len(dateSlice)-1])
+	return string(dateSlice[2 : len(dateSlice)-1])
 }
 
 // 默认长度为19为，time(10位）* 1E9(9位） + id， 修改长度，请修改改1E9...
@@ -130,4 +136,23 @@ func TimeIdSort(time, id int32) int64 {
 		return 0
 	}
 	return int64(time)*TimeIdSortMultiple + int64(id)
+}
+
+//获取指定月份第一秒和最后一秒
+func GetMonthFirstLast(year, month int) (string, int64, int64) {
+	if year < 1970 || month > 12 || month < 1 {
+		return "", 0, 0
+	}
+	var futureMonthFirst time.Time
+	if month >= 12 {
+		futureMonthFirst = time.Date(year+1, time.Month((month+1)%12), 1, 23, 59, 59, 0, time.Local)
+	} else {
+		futureMonthFirst = time.Date(year, time.Month(month+1), 1, 23, 59, 59, 0, time.Local)
+	}
+	// 指定月份最后一天最后一秒时间
+	lastDate := futureMonthFirst.Add(-1 * oneDay)
+	// 指定月份第一天第一秒
+	firstDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
+	monthStr := firstDate.Format(YYYYMM)
+	return monthStr, firstDate.Unix(), lastDate.Unix()
 }

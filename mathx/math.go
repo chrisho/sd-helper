@@ -43,3 +43,19 @@ func GolangRound(val float64, places int) float64 {
 
 	return result
 }
+
+//获取更小值
+func MinInt(x, y int) int {
+	if x <= y {
+		return x
+	}
+	return y
+}
+
+//获取更大值
+func MaxInt(x, y int) int {
+	if x >= y {
+		return x
+	}
+	return y
+}

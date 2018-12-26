@@ -1,6 +1,8 @@
 package stringx
 
 import (
+	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -61,9 +63,8 @@ func ImplodeMapInt32String(maps map[int32]string, sep string) (str string) {
 	return
 }
 
-
 // 将"_"转换为"-"
-func ConvertUnderlineToWhippletree(str string) (string) {
+func ConvertUnderlineToWhippletree(str string) string {
 	return strings.Replace(str, "_", "-", -1)
 }
 
@@ -108,4 +109,31 @@ func CamelString(s string) string {
 		data = append(data, d)
 	}
 	return string(data[:])
+}
+
+var searchHandle = regexp.MustCompile(`{\S+}`)
+
+//字符串命名参数格式化，明明参数用 { } 包裹，类似于python “xxx{data}xxx”.format(data=aaa)
+func NameFormat(formatStr string, data map[string]string) (string, error) {
+	length := len(data)
+	if length == 0 {
+		return formatStr, nil
+	}
+	var err error
+	result := searchHandle.ReplaceAllStringFunc(formatStr, func(paramName string) string {
+		if strings.Contains(paramName, "{{") && strings.Contains(paramName, "}}") {
+			return paramName
+		}
+		paramName = strings.TrimRight(strings.TrimLeft(paramName, "{"), "}")
+		val, ok := data[paramName]
+		if !ok {
+			err = fmt.Errorf("%s not found", paramName)
+			return ""
+		}
+		return val
+	})
+	if nil != err {
+		return "", err
+	}
+	return result, nil
 }
