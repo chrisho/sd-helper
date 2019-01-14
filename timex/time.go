@@ -1,10 +1,13 @@
 package timex
 
 import (
+	"sd-helper/mathx"
 	"time"
 )
 
 var (
+	loc, _ = time.LoadLocation("Local") //重要：获取时区
+
 	oneDay, _  = time.ParseDuration("24h")
 	oneHour, _ = time.ParseDuration("1h")
 )
@@ -155,4 +158,99 @@ func GetMonthFirstLast(year, month int) (string, int64, int64) {
 	firstDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
 	monthStr := firstDate.Format(YYYYMM)
 	return monthStr, firstDate.Unix(), lastDate.Unix()
+}
+
+//获取某月有多少天
+func MonthDays(year, month int) (days int) {
+	if month != 2 {
+		if month == 4 || month == 6 || month == 9 || month == 11 {
+			days = 30
+
+		} else {
+			days = 31
+		}
+	} else {
+		if ((year%4) == 0 && (year%100) != 0) || (year%400) == 0 {
+			days = 29
+		} else {
+			days = 28
+		}
+	}
+	return
+}
+
+//获取指定时间戳下n月后同一天的时间戳
+// 如果下n个月没有这一天，则返回该月的最后一天
+func NextNMonths(ts int64, months int) int64 {
+	dt := time.Unix(ts, 0)
+	month := int(dt.Month()) + months
+	year := dt.Year() + int(month/12)
+	month = month % 12
+	day := mathx.MinInt(dt.Day(), MonthDays(year, month))
+	dt = time.Date(year, time.Month(month), day, dt.Hour(), dt.Minute(), dt.Second(), 0, loc)
+	return dt.Unix()
+}
+func DateNextNMonths(dt time.Time, months int) time.Time {
+	month := int(dt.Month()) + months
+	year := dt.Year() + int(month/12)
+	month = month % 12
+	day := mathx.MinInt(dt.Day(), MonthDays(year, month))
+	dt = time.Date(year, time.Month(month), day, dt.Hour(), dt.Minute(), dt.Second(), 0, loc)
+	return dt
+}
+
+const (
+	NoDateEnd = 1 + iota
+	NoDateStart
+	DateStartEnd
+)
+
+func eachMonthLastDay(startDate, endDate time.Time, convertType int) [2]int64 {
+	switch convertType {
+	case NoDateEnd:
+		var nextYear int
+		var nextMonth int
+		if startDate.Month() == 12 {
+			nextYear = startDate.Year() + 1
+			nextMonth = 1
+		} else {
+			nextYear = startDate.Year()
+			nextMonth = int(startDate.Month()) + 1
+		}
+		tEndDate := time.Date(nextYear, time.Month(nextMonth), 1, 23, 59, 59, 0, loc)
+		d, _ := time.ParseDuration("-24h")
+		tEndDate = tEndDate.Add(d)
+		return [2]int64{startDate.Unix(), tEndDate.Unix()}
+	case NoDateStart:
+		startDate = time.Date(startDate.Year(), startDate.Month(), 26, 0, 0, 0, 0, loc)
+		return [2]int64{startDate.Unix(), endDate.Unix()}
+	case DateStartEnd:
+		return [2]int64{startDate.Unix(), endDate.Unix()}
+	default:
+		return [2]int64{0, 0}
+	}
+}
+
+//获取指定时间段内包含26号之后的所有时间段
+func GetEachMonthLastDays(startTs, endTs int64) (result [][2]int64) {
+	result = make([][2]int64, 0, 5)
+	startDate := time.Unix(startTs, 0)
+	endDate := time.Unix(endTs, 0)
+	if startDate.Month() == endDate.Month() && endDate.Day() < 26 {
+		return
+	}
+	tStartDate := time.Date(startDate.Year(), startDate.Month(), 26, 0, 0, 0, 0, loc)
+	if endDate.Day() < 26 {
+		result = append(result, eachMonthLastDay(tStartDate, tStartDate, NoDateEnd))
+	} else {
+		tEndDate := time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 0, 0, 0, 0, loc)
+		result = append(result, eachMonthLastDay(tEndDate, tEndDate, NoDateStart))
+		result = append(result, eachMonthLastDay(tStartDate, tStartDate, NoDateEnd))
+	}
+	addMonth := (endDate.Year()-startDate.Year())*12 + (int(endDate.Month()) - int(startDate.Month())) - 1
+	for i := 0; i < addMonth; i++ {
+		nextNMonth := DateNextNMonths(tStartDate, i+1)
+		result = append(result, eachMonthLastDay(nextNMonth, nextNMonth, NoDateEnd))
+	}
+	return
 }

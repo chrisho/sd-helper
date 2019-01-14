@@ -59,3 +59,19 @@ func MaxInt(x, y int) int {
 	}
 	return y
 }
+
+//获取更小值
+func MinInt64(x, y int64) int64 {
+	if x <= y {
+		return x
+	}
+	return y
+}
+
+//获取更大值
+func MaxInt64(x, y int64) int64 {
+	if x >= y {
+		return x
+	}
+	return y
+}
