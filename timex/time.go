@@ -1,7 +1,7 @@
 package timex
 
 import (
-	"sd-helper/mathx"
+	"github.com/chrisho/sd-helper/mathx"
 	"time"
 )
 
