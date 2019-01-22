@@ -61,3 +61,12 @@ func (s IntSet) List() []int {
 	}
 	return intList
 }
+func NewStrSet() *StrSet {
+	return &StrSet{Unimap: make(map[interface{}]bool)}
+}
+func NewInt64Set() *Int64Set {
+	return &Int64Set{Unimap: make(map[interface{}]bool)}
+}
+func NewIntSet() *IntSet {
+	return &IntSet{Unimap: make(map[interface{}]bool)}
+}
